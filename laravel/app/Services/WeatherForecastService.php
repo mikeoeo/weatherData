@@ -177,12 +177,14 @@ class WeatherForecastService
             /**
              * @todo test below POST method
              */
-            if (!empty($dataProvider->payload)) {
-                $payloadJson = $dataProvider->payload;
-                $payloadJson = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $payloadJson);
-                $response = Http::retry(3,100)
-                    ->withBody($payloadJson)
-                    ->post($providerUrl);
+            if ($dataProvider->method == 'POST') {
+                if (!empty($dataProvider->payload)) {
+                    $payloadJson = $dataProvider->payload;
+                    $payloadJson = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $payloadJson);
+                    $response = Http::retry(3,100)
+                        ->withBody($payloadJson)
+                        ->post($providerUrl);
+                }
             }
         }
     }
