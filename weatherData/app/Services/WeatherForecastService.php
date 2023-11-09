@@ -10,10 +10,28 @@ use Illuminate\Support\Facades\Http;
 
 class WeatherForecastService
 {
-    protected NormalizerService $normalizerService;
-    protected ModelValidator $modelValidator;
-    protected string $jobLogMessage;
+    /**
+     * A service that allows us to normalize whatever data we get from the API endpoints
+     * @var NormalizerService
+     */
+    protected $normalizerService;
+    
+    /**
+     * A service that allows us to validate some of our models before we use them
+     * @var ModelValidator
+     */
+    protected $modelValidator;
+    
+    /**
+     * A string message that allows us to get a message accross from a function to our logs
+     * @var string
+     */
+    protected $jobLogMessage;
 
+    /**
+     * @param NormalizerService 
+     * @param ModelValidator
+     */
     public function __construct(NormalizerService $normalizerService, ModelValidator $modelValidator)
     {
         $this->normalizerService = $normalizerService;
@@ -22,10 +40,12 @@ class WeatherForecastService
     }
 
     /**
-     * @param int
-     * @param int
+     * Fetch and store data from the given (or all) providers for the given (or all) locations
+     * @param int id of the DataProvider or 0 for all active providers
+     * @param int id of the Location or 0 for all locations
+     * @return bool
      */
-    public function fetchAllData($dataProviderId = 0, $locationId = 0)
+    public function fetchAllData(int $dataProviderId = 0, int $locationId = 0): bool
     {
         $dataProviders = $this->getDataProviders($dataProviderId);
         $locations = $this->getLocations($locationId);
@@ -67,9 +87,14 @@ class WeatherForecastService
                 $this->logJobStatus($foundData, $dataProvider->id, $location->id, $this->jobLogMessage);
             }
         }
+        return true;
     }
 
-    protected function getDataProviders($dataProviderId)
+    /**
+     * Get data providers that will be used
+     * @param int DataProvider id
+     */
+    protected function getDataProviders(int $dataProviderId)
     {
         $dataProviders = [];
         if ($dataProviderId == 0) {
@@ -88,7 +113,11 @@ class WeatherForecastService
         return $dataProviders;
     }
 
-    protected function getLocations($locationId)
+    /**
+     * Get locations that will be used
+     * @param int Location id
+     */
+    protected function getLocations(int $locationId)
     {
         $locations = [];
         if ($locationId == 0) {
@@ -107,7 +136,13 @@ class WeatherForecastService
         return $locations;
     }
 
-    protected function fetchData($dataProvider, $location)
+    /**
+     * Fetch data from a provider for a location or false on error
+     * @param DataProvider
+     * @param Location
+     * @return array|bool
+     */
+    protected function fetchData(DataProvider $dataProvider, Location $location)
     {
         $providerUrl = $dataProvider->url;
         $latLonPart = $dataProvider->lat_lon_format;
@@ -126,7 +161,14 @@ class WeatherForecastService
         }
     }
 
-    protected function logJobStatus($status, $dataProviderId, $locationId, $message = '')
+    /**
+     * Log how the job went
+     * @param bool 0 for failure, 1 for success
+     * @param int data provider id
+     * @param int location id
+     * @param string log message
+     */
+    protected function logJobStatus(bool $status, int $dataProviderId, int $locationId, string $message = '')
     {
         \App\Models\JobStatus::create([
             'location_id' => $locationId,
@@ -136,7 +178,13 @@ class WeatherForecastService
         ]);
     }
 
-    protected function savePrecipitationDailyData($normalizedData, $dataProviderId, $locationId)
+    /**
+     * @param array normalized data
+     * @param int data provider id
+     * @param int location id
+     * @return bool
+     */
+    protected function savePrecipitationDailyData(array $normalizedData, int $dataProviderId, int $locationId)
     {
         $foundData = false;
         if (isset($normalizedData['precipitation']['daily'])) {
@@ -160,6 +208,12 @@ class WeatherForecastService
         return $foundData;
     }
 
+    /**
+     * @param array normalized data
+     * @param int data provider id
+     * @param int location id
+     * @return bool
+     */
     protected function savePrecipitationHourlyData($normalizedData, $dataProviderId, $locationId)
     {
         $foundData = false;
@@ -184,6 +238,12 @@ class WeatherForecastService
         return $foundData;
     }
 
+    /**
+     * @param array normalized data
+     * @param int data provider id
+     * @param int location id
+     * @return bool
+     */
     protected function saveTemperatureDailyData($normalizedData, $dataProviderId, $locationId)
     {
         $foundData = false;
@@ -212,6 +272,12 @@ class WeatherForecastService
         return $foundData;
     }
 
+    /**
+     * @param array normalized data
+     * @param int data provider id
+     * @param int location id
+     * @return bool
+     */
     protected function saveTemperatureHourlyData($normalizedData, $dataProviderId, $locationId)
     {
         $foundData = false;

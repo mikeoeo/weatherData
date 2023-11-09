@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Log;
 
 class NormalizerService
 {
+    /**
+     * Normalize fetched data in order for them to be ready for db storing
+     * @param DataProvider
+     * @param array
+     */
     public function normalize(DataProvider $dataProvider, array $data)
     {
         if ($dataProvider->name === 'OpenMeteo') {
@@ -18,7 +23,12 @@ class NormalizerService
         return false;
     }
 
-    protected function normalizeOpenMeteo($data)
+    /**
+     * Normalized data fetched from Open Meteo
+     * @param array the fetched data
+     * @return array the normalized data
+     */
+    protected function normalizeOpenMeteo(array $data)
     {
         $normalizedData = [];
         if (isset($data['daily']['time'])) {
@@ -69,7 +79,12 @@ class NormalizerService
         return $normalizedData;
     }
 
-    protected function normalizeWeatherApi($data)
+    /**
+     * Normalized data fetched from Weather API
+     * @param array the fetched data
+     * @return array the normalized data
+     */
+    protected function normalizeWeatherApi(array $data)
     {
         $normalizedData = [];
         if (isset($data['forecast']['forecastday'])) {
