@@ -29,8 +29,8 @@ class WeatherForecastService
     protected $jobLogMessage;
 
     /**
-     * @param NormalizerService 
-     * @param ModelValidator
+     * @param NormalizerService $normalizerService
+     * @param ModelValidator $modelValidator
      */
     public function __construct(NormalizerService $normalizerService, ModelValidator $modelValidator)
     {
@@ -41,8 +41,8 @@ class WeatherForecastService
 
     /**
      * Fetch and store data from the given (or all) providers for the given (or all) locations
-     * @param int id of the DataProvider or 0 for all active providers
-     * @param int id of the Location or 0 for all locations
+     * @param int $dataProviderId id of the DataProvider or 0 for all active providers
+     * @param int $locationId id of the Location or 0 for all locations
      * @return bool
      */
     public function fetchAllData(int $dataProviderId = 0, int $locationId = 0): bool
@@ -92,7 +92,7 @@ class WeatherForecastService
 
     /**
      * Get data providers that will be used
-     * @param int DataProvider id
+     * @param int $dataProviderId DataProvider id
      */
     protected function getDataProviders(int $dataProviderId)
     {
@@ -115,7 +115,7 @@ class WeatherForecastService
 
     /**
      * Get locations that will be used
-     * @param int Location id
+     * @param int $locationId Location id
      */
     protected function getLocations(int $locationId)
     {
@@ -138,8 +138,8 @@ class WeatherForecastService
 
     /**
      * Fetch data from a provider for a location or false on error
-     * @param DataProvider
-     * @param Location
+     * @param DataProvider $dataProvider
+     * @param Location $location
      * @return array|bool
      */
     protected function fetchData(DataProvider $dataProvider, Location $location)
@@ -172,10 +172,10 @@ class WeatherForecastService
 
     /**
      * Log how the job went
-     * @param bool 0 for failure, 1 for success
-     * @param int data provider id
-     * @param int location id
-     * @param string log message
+     * @param bool $status 0 for failure, 1 for success
+     * @param int $dataProviderId data provider id
+     * @param int $locationId location id
+     * @param string $message log message
      */
     protected function logJobStatus(bool $status, int $dataProviderId, int $locationId, string $message = '')
     {
@@ -188,9 +188,9 @@ class WeatherForecastService
     }
 
     /**
-     * @param array normalized data
-     * @param int data provider id
-     * @param int location id
+     * @param array $normalizedData normalized data
+     * @param int $dataProviderId data provider id
+     * @param int $locationId location id
      * @return bool
      */
     protected function savePrecipitationDailyData(array $normalizedData, int $dataProviderId, int $locationId)
@@ -218,9 +218,9 @@ class WeatherForecastService
     }
 
     /**
-     * @param array normalized data
-     * @param int data provider id
-     * @param int location id
+     * @param array $normalizedData normalized data
+     * @param int $dataProviderId data provider id
+     * @param int $locationId location id
      * @return bool
      */
     protected function savePrecipitationHourlyData($normalizedData, $dataProviderId, $locationId)
@@ -248,9 +248,9 @@ class WeatherForecastService
     }
 
     /**
-     * @param array normalized data
-     * @param int data provider id
-     * @param int location id
+     * @param array $normalizedData normalized data
+     * @param int $dataProviderId data provider id
+     * @param int $locationId location id
      * @return bool
      */
     protected function saveTemperatureDailyData($normalizedData, $dataProviderId, $locationId)
@@ -282,9 +282,9 @@ class WeatherForecastService
     }
 
     /**
-     * @param array normalized data
-     * @param int data provider id
-     * @param int location id
+     * @param array $normalizedData normalized data
+     * @param int $dataProviderId data provider id
+     * @param int $locationId location id
      * @return bool
      */
     protected function saveTemperatureHourlyData($normalizedData, $dataProviderId, $locationId)

@@ -8,9 +8,24 @@ use Illuminate\Support\Facades\Log;
 class NormalizerService
 {
     /**
-     * Normalize fetched data in order for them to be ready for db storing
-     * @param DataProvider
-     * @param array
+     * Normalize fetched data in order for them to be ready for db storing. 
+     * The first level key should be 'precipitation' or 'temperature'.
+     * The second level key should be 'daily' or 'hourly'.
+     * The third level key should be an auto increment number.
+     * The forth level keys for precipitation daily are 'forecast_day', 'amount' and 'percentage', 
+     * for the precipitation hourly are 'forecast_datetime', 'amount' and 'percentage', 
+     * for the temperature daily are 'forecast_day', 'temperature_min', 'temperature_max', 'temperature_avg', 'apparent_temperature_min', 'apparent_temperature_max' and 'apparent_temperature_avg'
+     * and for the temperature hourly are 'forecast_datetime', 'temperature' and 'temperature_felt'.
+     * 
+     * In case some of the fourth level data do not exist, we need to set their value to null, like in the following example:
+     * 
+     * $normalizedData['precipitation']['hourly'][0] = [
+     *      'forecast_datetime' => '2023-11-09 00:00',
+     *      'amount' => null,
+     *      'percentage' => 10.0
+     * ];
+     * @param DataProvider $dataProvider
+     * @param array $data
      */
     public function normalize(DataProvider $dataProvider, array $data)
     {
@@ -25,7 +40,7 @@ class NormalizerService
 
     /**
      * Normalized data fetched from Open Meteo
-     * @param array the fetched data
+     * @param array $data the fetched data
      * @return array the normalized data
      */
     protected function normalizeOpenMeteo(array $data)
@@ -81,7 +96,7 @@ class NormalizerService
 
     /**
      * Normalized data fetched from Weather API
-     * @param array the fetched data
+     * @param array $data the fetched data
      * @return array the normalized data
      */
     protected function normalizeWeatherApi(array $data)

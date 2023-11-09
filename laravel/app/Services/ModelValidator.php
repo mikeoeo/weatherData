@@ -9,8 +9,8 @@ class ModelValidator
 {
     /**
      * Check if an object is valid and ready to be used 
-     * @param string the class name of the object
-     * @param object the object we want to check the validity of
+     * @param string $className the class name of the object
+     * @param object $obj the object we want to check the validity of
      * @return bool true if the object is valid, false otherwise
      */
     public function isValid(string $className, object $obj)
