@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_DATABASE=weather_db
+      - MYSQL_USER=weather_user
+      - MYSQL_PASSWORD=pass
+      - MYSQL_ROOT_PASSWORD=pass
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+  myapp:
+    image: docker.io/bitnami/laravel:10
+    ports:
+      - '8000:8000'
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=weather_user
+      - DB_PASSWORD=pass
+      - DB_DATABASE=weather_db
+    volumes:
+      - './my-project:/app'
+    depends_on:
+      - mysql
