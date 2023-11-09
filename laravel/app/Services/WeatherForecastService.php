@@ -152,7 +152,7 @@ class WeatherForecastService
         $latLonPart = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $latLonPart);
         $url = $providerUrl . '&' . $latLonPart;
         if ($dataProvider->method == 'GET') {
-            $response = Http::get($url);
+            $response = Http::retry(3,100)->get($url);
             if ($response->successful()) {
                 return $response->json();
             } else {
