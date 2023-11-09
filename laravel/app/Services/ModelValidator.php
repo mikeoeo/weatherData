@@ -34,8 +34,7 @@ class ModelValidator
                 if (
                     !empty($obj->name) &&
                     !empty($obj->url) &&
-                    filter_var($obj->url, FILTER_VALIDATE_URL) &&
-                    !empty($obj->lat_lon_format)
+                    filter_var($obj->url, FILTER_VALIDATE_URL) 
                 ) {
                     $valid = true;
                 }

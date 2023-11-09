@@ -50,32 +50,32 @@ class WeatherForecastService
         $dataProviders = $this->getDataProviders($dataProviderId);
         $locations = $this->getLocations($locationId);
         if (empty($dataProviders) || empty($locations)) {
-            $this->logJobStatus(0, 0, 0, 'No data providers or locations');
+            $this->logJobLog(0, null, null, 'No data providers or locations');
             return false;
         }
 
         foreach ($dataProviders as $dataProvider)
         {
             if (!$this->modelValidator->isValid(DataProvider::class, $dataProvider)) {
-                $this->logJobStatus(0, $dataProvider->id, 0, 'Data provider not valid');
+                $this->logJobLog(0, $dataProvider->id, null, 'Data provider not valid');
                 continue;
             }
             foreach ($locations as $location)
             {
                 if (!$this->modelValidator->isValid(Location::class, $location)) {
-                    $this->logJobStatus(0, $dataProvider->id, $location->id, 'Location not valid');
+                    $this->logJobLog(0, $dataProvider->id, $location->id, 'Location not valid');
                     continue;
                 }
                 $data = $this->fetchData($dataProvider, $location);
-                if ($data === false) {
-                    $this->logJobStatus(0, $dataProvider->id, $location->id, $this->jobLogMessage);
+                if (empty($data)) {
+                    $this->logJobLog(0, $dataProvider->id, $location->id, $this->jobLogMessage);
                     continue;
                 }
                 
                 $this->jobLogMessage = '';
                 $normalizedData = $this->normalizerService->normalize($dataProvider, $data);
                 if ($normalizedData === false) {
-                    $this->logJobStatus(0, $dataProvider->id, $location->id, 'No normalizer found for data provider ' . $dataProvider->name);
+                    $this->logJobLog(0, $dataProvider->id, $location->id, 'No normalizer found for data provider ' . $dataProvider->name);
                     continue;
                 }
 
@@ -84,7 +84,7 @@ class WeatherForecastService
                 $foundData &= $this->saveTemperatureDailyData($normalizedData, $dataProvider->id, $location->id);
                 $foundData &= $this->saveTemperatureHourlyData($normalizedData, $dataProvider->id, $location->id);
 
-                $this->logJobStatus($foundData, $dataProvider->id, $location->id, $this->jobLogMessage);
+                $this->logJobLog($foundData, $dataProvider->id, $location->id, $this->jobLogMessage);
             }
         }
         return true;
@@ -149,14 +149,23 @@ class WeatherForecastService
         $lat = $location->lat;
         $lon = $location->lon;
 
-        $latLonPart = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $latLonPart);
-        $url = $providerUrl . '&' . $latLonPart;
         if ($dataProvider->method == 'GET') {
-            $response = Http::retry(3,100)->get($url);
+            if (!empty($dataProvider->payload)) {
+                $payloadArray = json_decode($dataProvider->payload, true);
+                $payloadArray = array_map(function($value) use ($lat, $lon) {
+                    $value = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $value);
+                    return $value;
+                 }, $payloadArray);
+                $response = Http::retry(3,100)
+                ->withQueryParameters($payloadArray)
+                ->get($providerUrl);
+            } else {
+                $response = Http::retry(3,100)->get($providerUrl);
+            }
             if ($response->successful()) {
                 return $response->json();
             } else {
-                $this->jobLogMessage = 'Could not fetch data from url ' . $url;
+                $this->jobLogMessage = 'Could not fetch data from url ' . $providerUrl;
                 Log::warning($this->jobLogMessage);
                 return false;
             }
@@ -177,9 +186,9 @@ class WeatherForecastService
      * @param int $locationId location id
      * @param string $message log message
      */
-    protected function logJobStatus(bool $status, int $dataProviderId, int $locationId, string $message = '')
+    protected function logJobLog(bool $status, ?int $dataProviderId, ?int $locationId, string $message = '')
     {
-        \App\Models\JobStatus::create([
+        \App\Models\JobLog::create([
             'location_id' => $locationId,
             'data_providers_id' => $dataProviderId,
             'success_status' => $status,

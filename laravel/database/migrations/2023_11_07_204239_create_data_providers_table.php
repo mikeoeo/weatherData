@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url', 500);
-            $table->string('lat_lon_format');
             $table->string('method');
-            $table->json('additional_headers')->nullable();
+            $table->json('payload')->nullable();
             $table->boolean('active');
             $table->timestamps();
         });
