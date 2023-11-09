@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_statuses', function (Blueprint $table) {
+        Schema::create('job_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')->references('id')->on('locations');
-            $table->unsignedBigInteger('data_providers_id');
+            $table->unsignedBigInteger('data_providers_id')->nullable();
             $table->foreign('data_providers_id')->references('id')->on('data_providers');
             $table->boolean('success_status');
             $table->text('message');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_statuses');
+        Schema::dropIfExists('job_logs');
     }
 };
