@@ -157,8 +157,8 @@ class WeatherForecastService
                     return $value;
                  }, $payloadArray);
                 $response = Http::retry(3,100)
-                ->withQueryParameters($payloadArray)
-                ->get($providerUrl);
+                    ->withQueryParameters($payloadArray)
+                    ->get($providerUrl);
             } else {
                 $response = Http::retry(3,100)->get($providerUrl);
             }
@@ -170,12 +170,20 @@ class WeatherForecastService
                 return false;
             }
         } else {
-            /**
-             * @todo implement POST method
-             */
             $this->jobLogMessage = 'Only GET method is currently supported.';
             Log::critical($this->jobLogMessage);
             return false;
+
+            /**
+             * @todo test below POST method
+             */
+            if (!empty($dataProvider->payload)) {
+                $payloadJson = $dataProvider->payload;
+                $payloadJson = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $payloadJson);
+                $response = Http::retry(3,100)
+                    ->withBody($payloadJson)
+                    ->post($providerUrl);
+            }
         }
     }
 
