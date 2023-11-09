@@ -42,3 +42,15 @@ php artisan app:fetch-forecast-data
 * * * * * cd /path-to-the-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 In case we want to schedule this task on Windows, we can find the appropriate instructions [here](https://gist.github.com/Splode/94bfa9071625e38f7fd76ae210520d94)
+
+## Adding more providers and locations
+The project has been designed to support the addition of more providers and locations. 
+### Adding providers
+In order to add a provider we first need to add a new row in the `data_providers` table with a `name`, a `url` without the latitude and longitude arguments, a `lat_lon_format` string that describes the latitude and longitude arguments format, the `method` we will use for the request and any `additional_headers` we want to include in the API call. Setting the `active` column to 1 will put the provider in the active providers pool that is used to fetch data from.
+
+Additionally, we need to create a normalizer function in the `app\Services\NormalizerService.php` file that will normalize the data we receive from the API call in a predefined format so that they are ready to be stored to the database. The format is described in the comments.
+
+### Adding locations
+In order to add more locations we just need to add them as new rows to the locations table with a `name`, a `lat` and a `lon`. 
+
+Note: Depending on the pricing plan of some APIs, we may need to implement some type of load balancing in case we add too many locations.
