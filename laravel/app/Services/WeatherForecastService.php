@@ -151,12 +151,21 @@ class WeatherForecastService
 
         $latLonPart = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $latLonPart);
         $url = $providerUrl . '&' . $latLonPart;
-        $response = Http::get($url);
-        if ($response->successful()) {
-            return $response->json();
+        if ($dataProvider->method == 'GET') {
+            $response = Http::get($url);
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                $this->jobLogMessage = 'Could not fetch data from url ' . $url;
+                Log::warning($this->jobLogMessage);
+                return false;
+            }
         } else {
-            $this->jobLogMessage = 'Could not fetch data from url ' . $url;
-            Log::warning($this->jobLogMessage);
+            /**
+             * @todo implement POST method
+             */
+            $this->jobLogMessage = 'Only GET method is currently supported.';
+            Log::critical($this->jobLogMessage);
             return false;
         }
     }
