@@ -59,11 +59,11 @@ class NormalizerService
                 if (isset($dailyData['time'], $dailyData['temperature_2m_min'], $dailyData['temperature_2m_max'], $dailyData['apparent_temperature_min'], $dailyData['apparent_temperature_max'])) {
                     $normalizedData['temperature']['daily'][$slot] = [
                         'forecast_day' => $day,
-                        'temperature_min' => $dailyData['temperature_2m_min'][0],
-                        'temperature_max' => $dailyData['temperature_2m_max'][0],
+                        'temperature_min' => $dailyData['temperature_2m_min'][$slot],
+                        'temperature_max' => $dailyData['temperature_2m_max'][$slot],
                         'temperature_avg' => null,
-                        'apparent_temperature_min' => $dailyData['apparent_temperature_min'][0],
-                        'apparent_temperature_max' => $dailyData['apparent_temperature_max'][0],
+                        'apparent_temperature_min' => $dailyData['apparent_temperature_min'][$slot],
+                        'apparent_temperature_max' => $dailyData['apparent_temperature_max'][$slot],
                         'apparent_temperature_avg' => null
                     ];
                 }
