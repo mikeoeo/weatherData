@@ -21,9 +21,9 @@ docker-compose up -d --build
 ```
 This will create the necessary images and start our containers in the background.
 
-Important note: This operation will also run composer install, so it may take around 6-8 minutes to finish.
+**Important note**: This operation will also run composer install, so it may take around 6-8 minutes to finish.
 
-4. For the next steps we have to connect to our docker container, so we should run
+4. After the laravel container is up and running, we have to connect to it to continue the next steps, so we should run
 ```
 docker exec -it weatherdata-myapp-1 bash
 ```
