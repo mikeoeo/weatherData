@@ -11,16 +11,16 @@ class NormalizeProviderTest extends TestCase
         'precipitation' => [
             'daily' => [
                 0 => [
-                'forecast_day' => '',
-                'amount' => 0,
-                'percentage' => 0,
+                    'forecast_day' => '',
+                    'amount' => 0,
+                    'percentage' => 0,
                 ],
             ],
             'hourly' => [
                 0 => [
-                'forecast_datetime' => '',
-                'amount' => 0,
-                'percentage' => 0,
+                    'forecast_datetime' => '',
+                    'amount' => 0,
+                    'percentage' => 0,
                 ],
                 // ...
             ],
@@ -28,20 +28,20 @@ class NormalizeProviderTest extends TestCase
         'temperature' => [
             'daily' => [
                 0 => [
-                'forecast_day' => '',
-                'temperature_min' => 0,
-                'temperature_max' => 0,
-                'temperature_avg' => 0,
-                'apparent_temperature_min' => 0,
-                'apparent_temperature_max' => 0,
-                'apparent_temperature_avg' => 0,
+                    'forecast_day' => '',
+                    'temperature_min' => 0,
+                    'temperature_max' => 0,
+                    'temperature_avg' => 0,
+                    'apparent_temperature_min' => 0,
+                    'apparent_temperature_max' => 0,
+                    'apparent_temperature_avg' => 0,
                 ],
             ],
             'hourly' => [
                 0 => [
-                'forecast_datetime' => '',
-                'temperature' => 0,
-                'temperature_felt' => 0,
+                    'forecast_datetime' => '',
+                    'temperature' => 0,
+                    'temperature_felt' => 0,
                 ],
                 // ...
             ],
