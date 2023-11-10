@@ -5,7 +5,7 @@ Regarding precipitation we gather the daily and hourly forecasted amount of rain
 
 The project currently supports fetching data from [Open-Meteo](https://open-meteo.com/) and [WeatherAPI](https://www.weatherapi.com/), but more providers can be added in the future.
 ## Installation instructions
-1. In order to run this project we should first change our directory to the root of the project, where our `docker-compose.yml` file can be found
+1. In order to run this project we should first change our directory to the root of the project, where our `docker-compose.yml` file can be found with
 ```
 cd weatherData
 ```
