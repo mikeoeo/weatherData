@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         \App\Models\Location::create([
-            'name' => 'Thessaloniki',
-            'lat' => 40.64,
-            'lon' => 22.93,
+            'name' => 'AgroApps HQ',
+            'lat' => 40.586610,
+            'lon' => 22.961960,
         ]);
 
         \App\Models\DataProvider::create([
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
                 "hourly": "temperature_2m,apparent_temperature,precipitation_probability",
                 "daily": "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum,precipitation_probability_max",
                 "timezone": "Europe/Moscow",
-                "forecast_days": "1"
+                "forecast_days": "7"
             }',
         ]);
 
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             'payload' => '{
                 "q": "{$lat},{$lon}",
                 "key": "4da782a41477413c9c7152342230711",
-                "days": "1",
+                "days": "7",
                 "aqi": "no",
                 "alerts": "no"
             }',
