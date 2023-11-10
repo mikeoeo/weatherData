@@ -126,6 +126,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        //custom mysql log
+        'jobs_log' => [
+            'driver' => 'custom',
+            'handler' => App\Logging\JobsLoggingHandler::class,
+            'via' => App\Logging\JobsLogger::class,
+            'level' => 'debug',
+        ],
     ],
 
 ];

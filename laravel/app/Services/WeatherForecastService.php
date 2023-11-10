@@ -50,32 +50,32 @@ class WeatherForecastService
         $dataProviders = $this->getDataProviders($dataProviderId);
         $locations = $this->getLocations($locationId);
         if (empty($dataProviders) || empty($locations)) {
-            $this->logJobLog(0, null, null, 'No data providers or locations');
+            $this->logJob(0, null, null, 'No data providers or locations');
             return false;
         }
 
         foreach ($dataProviders as $dataProvider)
         {
             if (!$this->modelValidator->isValid(DataProvider::class, $dataProvider)) {
-                $this->logJobLog(0, $dataProvider->id, null, 'Data provider not valid');
+                $this->logJob(0, $dataProvider->id, null, 'Data provider not valid');
                 continue;
             }
             foreach ($locations as $location)
             {
                 if (!$this->modelValidator->isValid(Location::class, $location)) {
-                    $this->logJobLog(0, $dataProvider->id, $location->id, 'Location not valid');
+                    $this->logJob(0, $dataProvider->id, $location->id, 'Location not valid');
                     continue;
                 }
                 $data = $this->fetchData($dataProvider, $location);
                 if (empty($data)) {
-                    $this->logJobLog(0, $dataProvider->id, $location->id, $this->jobLogMessage);
+                    $this->logJob(0, $dataProvider->id, $location->id, $this->jobLogMessage);
                     continue;
                 }
                 
                 $this->jobLogMessage = '';
                 $normalizedData = $this->normalizerService->normalize($dataProvider, $data);
                 if ($normalizedData === false) {
-                    $this->logJobLog(0, $dataProvider->id, $location->id, 'No normalizer found for data provider ' . $dataProvider->name);
+                    $this->logJob(0, $dataProvider->id, $location->id, 'No normalizer found for data provider ' . $dataProvider->name);
                     continue;
                 }
 
@@ -84,7 +84,7 @@ class WeatherForecastService
                 $foundData &= $this->saveTemperatureDailyData($normalizedData, $dataProvider->id, $location->id);
                 $foundData &= $this->saveTemperatureHourlyData($normalizedData, $dataProvider->id, $location->id);
 
-                $this->logJobLog($foundData, $dataProvider->id, $location->id, $this->jobLogMessage);
+                $this->logJob($foundData, $dataProvider->id, $location->id, $this->jobLogMessage);
             }
         }
         return true;
@@ -196,13 +196,12 @@ class WeatherForecastService
      * @param int $locationId location id
      * @param string $message log message
      */
-    protected function logJobLog(bool $status, ?int $dataProviderId, ?int $locationId, string $message = '')
+    protected function logJob(bool $status, ?int $dataProviderId, ?int $locationId, string $message = '')
     {
-        \App\Models\JobLog::create([
+        Log::channel('jobs_log')->info($message, [
             'location_id' => $locationId,
             'data_providers_id' => $dataProviderId,
-            'success_status' => $status,
-            'message' => $message,
+            'success_status' => $status
         ]);
     }
 
