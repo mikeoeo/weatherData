@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url', 500);
-            $table->string('method');
+            $table->string('request_method');
+            $table->string('response_type');
             $table->json('payload')->nullable();
             $table->boolean('active');
             $table->timestamps();

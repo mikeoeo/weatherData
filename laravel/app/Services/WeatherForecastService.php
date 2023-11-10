@@ -148,7 +148,7 @@ class WeatherForecastService
         $lat = $location->lat;
         $lon = $location->lon;
 
-        if ($dataProvider->method == 'GET') {
+        if ($dataProvider->request_method == 'GET') {
             if (!empty($dataProvider->payload)) {
                 $payloadArray = json_decode($dataProvider->payload, true);
                 $payloadArray = array_map(function($value) use ($lat, $lon) {
@@ -162,29 +162,22 @@ class WeatherForecastService
                 $response = Http::retry(3,100)->get($providerUrl);
             }
             if ($response->successful()) {
-                return $response->json();
+                if ($dataProvider->response_type == 'JSON') {
+                    return $response->json();
+                } else {
+                    $this->jobLogMessage = 'Only JSON is currently supported as a response_type ' . $providerUrl;
+                    Log::critical($this->jobLogMessage);
+                    return false;
+                }
             } else {
                 $this->jobLogMessage = 'Could not fetch data from url ' . $providerUrl;
                 Log::warning($this->jobLogMessage);
                 return false;
             }
         } else {
-            $this->jobLogMessage = 'Only GET method is currently supported.';
+            $this->jobLogMessage = 'Only GET is currently supported as a request_method.';
             Log::critical($this->jobLogMessage);
             return false;
-
-            /**
-             * @todo test below POST method
-             */
-            if ($dataProvider->method == 'POST') {
-                if (!empty($dataProvider->payload)) {
-                    $payloadJson = $dataProvider->payload;
-                    $payloadJson = str_replace(['{$lat}', '{$lon}'], [$lat, $lon], $payloadJson);
-                    $response = Http::retry(3,100)
-                        ->withBody($payloadJson)
-                        ->post($providerUrl);
-                }
-            }
         }
     }
 

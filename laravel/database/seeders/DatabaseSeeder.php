@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'OpenMeteo',
             'url' => 'http://api.open-meteo.com/v1/forecast',
             'active' => 1,
-            'method' => 'GET',
+            'request_method' => 'GET',
+            'response_type' => 'JSON',
             'payload' => '{
                 "latitude": "{$lat}",
                 "longitude": "{$lon}",
@@ -39,7 +40,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'WeatherApi',
             'url' => 'http://api.weatherapi.com/v1/forecast.json',
             'active' => 1,
-            'method' => 'GET',
+            'request_method' => 'GET',
+            'response_type' => 'JSON',
             'payload' => '{
                 "q": "{$lat},{$lon}",
                 "key": "4da782a41477413c9c7152342230711",
