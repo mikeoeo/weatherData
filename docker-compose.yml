@@ -22,6 +22,6 @@ services:
       - DB_PASSWORD=pass
       - DB_DATABASE=weather_db
     volumes:
-      - './my-project:/app'
+      - './laravel:/app'
     depends_on:
       - mysql
