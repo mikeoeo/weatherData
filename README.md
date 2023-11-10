@@ -5,7 +5,10 @@ Regarding precipitation we gather the daily and hourly forecasted amount of rain
 
 The project currently supports fetching data from [Open-Meteo](https://open-meteo.com/) and [WeatherAPI](https://www.weatherapi.com/), but more providers can be added in the future.
 ## Installation instructions
-1. In order to run this project we should first change our directory to the root of the project, where our `docker-compose.yml` file can be found.
+1. In order to run this project we should first change our directory to the root of the project, where our `docker-compose.yml` file can be found
+```
+cd weatherData
+```
 2. Next we need to install our docker containers. Before this step, we need to make sure that we have docker installed. We can do that by running
 ```
 docker -v
@@ -16,36 +19,33 @@ which will output the version of our docker engine. In case this does not happen
 ```
 docker-compose up -d --build
 ```
-This will create the necessary images and start our two containers in the background.
+This will create the necessary images and start our containers in the background.
 
-4. The next step is the
-```
-composer install
-```
-which will fetch and install all the necessary libraries and tools that our project requires to run ([composer installation instructions](https://getcomposer.org/download/) if needed)
+Important note: This operation will also run composer install, so it may take around 6-8 minutes to finish.
 
-5. This is a good time to create a `.env` file in the `laravel` folder that has our main laravel code so that we can connect with our database. The default values for the DB variables are
+4. For the next steps we have to connect to our docker container, so we should run
 ```
-DB_DATABASE=weather_db
-DB_USERNAME=weather_user
-DB_PASSWORD=pass
+docker exec -it weatherdata-myapp-1 bash
 ```
+where `weatherdata-myapp-1` is the name of our laravel container
 
-6. We are now ready to initialize our tables by running
+5. From inside the container we are now ready to initialize our tables by running
 ```
 php artisan migrate:fresh --seed
 ```
 
-7. Our project is ready to fetch data! This can be done by running
+6. Our project is ready to fetch data! This can be done by running
 ```
 php artisan app:fetch-forecast-data
 ```
 which will try to fetch data and store data from all active providers for all locations.
-8. This command has also been scheduled to run every day at midnight, all we need to do is add the artisan scheduler run command entry to our crontab
+
+7. This command has also been scheduled to run every day at midnight, all we need to do is run our cron installation script with
 ```
-* * * * * cd /path-to-the-project && php artisan schedule:run >> /dev/null 2>&1
+chmod +c cron.sh
+./cron.sh
 ```
-In case we want to schedule this task on Windows, we can find the appropriate instructions [here](https://gist.github.com/Splode/94bfa9071625e38f7fd76ae210520d94)
+which will add the laravel scheduler in the container's crontab
 
 ## Adding more providers and locations
 The project has been designed to support the addition of more providers and locations. 
