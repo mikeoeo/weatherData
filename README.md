@@ -48,7 +48,9 @@ The project has been designed to support the addition of more providers and loca
 ### Adding providers
 In order to add a provider we first need to add a new row in the `data_providers` table with a `name`, a `url` without the latitude and longitude arguments, a `lat_lon_format` string that describes the latitude and longitude arguments format, the `method` we will use for the request and any `additional_headers` we want to include in the API call. Setting the `active` column to 1 will put the provider in the active providers pool that is used to fetch data from.
 
-Additionally, we need to create a normalizer function in the `app\Services\NormalizerService.php` file that will normalize the data we receive from the API call in a predefined format so that they are ready to be stored to the database. The format is described in the comments.
+Additionally, we need to create a normalizer function in the `laravel\app\Services\NormalizerService.php` file that will normalize the data we receive from the API call in a predefined format so that they are ready to be stored in the database.
+
+We also need to create a unit test function in the `laravel\tests\Unit\NormalizeProviderTest.php` file that will verify the correct functionality of the new normalizer function. For the test we just need to paste the response we get from the API call as a string variable, convert it to an associative array, pass it through our newly created normalize function and then run the tests by feeding the result to the `isNormalizedArray` function.
 
 ### Adding locations
 In order to add more locations we just need to add them as new rows to the locations table with a `name`, a `lat` and a `lon`. 
