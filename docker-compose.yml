@@ -1,4 +1,10 @@
 services:
+  composer_installation:
+    container_name: composer_installation
+    image: composer
+    volumes:
+      - ./laravel:/app
+    command: composer install --ignore-platform-reqs
   mysql:
     image: mysql:latest
     restart: always
@@ -22,4 +28,7 @@ services:
     volumes:
       - './laravel:/app'
     depends_on:
-      - mysql
+      mysql:
+        condition: service_started
+      composer_installation:
+        condition: service_completed_successfully
