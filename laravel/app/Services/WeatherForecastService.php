@@ -73,7 +73,7 @@ class WeatherForecastService
                 }
                 
                 $this->jobLogMessage = '';
-                $normalizedData = $this->normalizerService->normalize($dataProvider, $data);
+                $normalizedData = $this->normalizerService->normalize($dataProvider->name, $data);
                 if ($normalizedData === false) {
                     $this->logJob(0, $dataProvider->id, $location->id, 'No normalizer found for data provider ' . $dataProvider->name);
                     continue;
@@ -145,7 +145,6 @@ class WeatherForecastService
     protected function fetchData(DataProvider $dataProvider, Location $location)
     {
         $providerUrl = $dataProvider->url;
-        $latLonPart = $dataProvider->lat_lon_format;
         $lat = $location->lat;
         $lon = $location->lon;
 

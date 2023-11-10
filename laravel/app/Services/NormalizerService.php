@@ -24,17 +24,17 @@ class NormalizerService
      *      'amount' => null,
      *      'percentage' => 10.0
      * ];
-     * @param DataProvider $dataProvider
+     * @param string $dataProviderName
      * @param array $data
      */
-    public function normalize(DataProvider $dataProvider, array $data)
+    public function normalize(string $dataProviderName, array $data)
     {
-        if ($dataProvider->name === 'OpenMeteo') {
+        if ($dataProviderName === 'OpenMeteo') {
             return $this->normalizeOpenMeteo($data);
-        } else if ($dataProvider->name === 'WeatherApi') {
+        } else if ($dataProviderName === 'WeatherApi') {
             return $this->normalizeWeatherApi($data);
         }
-        Log::critical('No normalizer found for data provider ' . $dataProvider->name);
+        Log::critical('No normalizer found for data provider ' . $dataProviderName);
         return false;
     }
 
