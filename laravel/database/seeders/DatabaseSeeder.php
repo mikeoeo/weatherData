@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
                 "hourly": "temperature_2m,apparent_temperature,precipitation_probability",
                 "daily": "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum,precipitation_probability_max",
                 "timezone": "Europe/Moscow",
-                "forecast_days": "2"
+                "forecast_days": "1"
             }',
         ]);
 
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'payload' => '{
                 "q": "{$lat},{$lon}",
                 "key": "4da782a41477413c9c7152342230711",
-                "days": "2",
+                "days": "1",
                 "aqi": "no",
                 "alerts": "no"
             }',
